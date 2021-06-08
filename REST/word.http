@@ -1,0 +1,8 @@
+### Variables
+@user = { "word": "home", "translate": "дом", dictionary: 'First'}
+
+### put words
+POST  http://localhost:5000/api/word
+content-type: application/json
+
+{{word}}
