@@ -1,10 +1,7 @@
-import bcrypt from "bcryptjs";
-import config from "config";
+
 import { Router, Response } from "express";
 import { check, validationResult } from "express-validator/check";
-import gravatar from "gravatar";
 import HttpStatusCodes from "http-status-codes";
-import jwt from "jsonwebtoken";
 
 import Request from "../../types/Request";
 import Word, { IWord } from "../../models/Word";
@@ -28,9 +25,9 @@ router.post(
         .status(HttpStatusCodes.BAD_REQUEST)
         .json({ errors: errors.array() });
     }
-    console.log(JSON.stringify(req.body));
+
     const { word, translate, example, dictionary } = req.body;
-    console.log(word, translate, example, dictionary)
+
     try {
       let wordItem: IWord = await Word.findOne({ word: req.body.word });
 
@@ -60,5 +57,23 @@ router.post(
     }
   }
 );
+
+router.get("/byDictionary", [
+], async (req: Request & {dictionary: string}, res: Response) => {
+  try {
+    const dictionaryName = req.query.name;
+    if (!dictionaryName) {
+      res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send("Server Error");
+      return;
+    }
+
+    const list = await Word.find({dictionary: String(dictionaryName)});
+
+    res.json(list);
+  } catch (err) {
+    console.error(err.message);
+    res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send("Server Error");
+  }
+});
 
 export default router;
