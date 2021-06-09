@@ -28,13 +28,13 @@ router.post(
         .status(HttpStatusCodes.BAD_REQUEST)
         .json({ errors: errors.array() });
     }
-
+    console.log(JSON.stringify(req.body));
     const { word, translate, example, dictionary } = req.body;
     console.log(word, translate, example, dictionary)
     try {
-      let word: IWord = await Word.findOne({ word: req.body.word });
+      let wordItem: IWord = await Word.findOne({ word: req.body.word });
 
-      if (word) {
+      if (wordItem) {
         return res.status(HttpStatusCodes.BAD_REQUEST).json({
           errors: [
             {
@@ -44,23 +44,16 @@ router.post(
         });
       }
 
-      const options: gravatar.Options = {
-        s: "200",
-        r: "pg",
-        d: "mm"
-      };
-
-
       // Build user object based on IUser
       const wordFields = {
         word, translate, example, dictionary 
       };
 
-      word = new Word(wordFields);
+      const newWord = new Word(wordFields);
 
-      await word.save();
-      console.log('success', word);
+      await newWord.save();
 
+      res.json(newWord);
     } catch (err) {
       console.error(err.message);
       res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send("Server Error");
