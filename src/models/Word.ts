@@ -1,4 +1,5 @@
 import { Document, Model, model, Schema } from "mongoose";
+import { IUser } from "./User";
 
 /**
  * Interface to model the User Schema for TypeScript.
@@ -8,6 +9,7 @@ import { Document, Model, model, Schema } from "mongoose";
  * @param dictionary:string
  */
 export interface IWord extends Document {
+  user: IUser["_id"];
   word: string;
   translate: string;
   example: string;
@@ -15,21 +17,25 @@ export interface IWord extends Document {
 }
 
 const wordSchema: Schema = new Schema({
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
   word: {
     type: String,
     required: true,
   },
   translate: {
     type: String,
-    required: true
+    required: true,
   },
   example: {
-    type: String
+    type: String,
   },
   dictionary: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
 const Word: Model<IWord> = model("Word", wordSchema);
