@@ -1,50 +1,9 @@
 import { GraphQLObjectType, GraphQLString, GraphQLSchema } from "graphql";
 
-const words = [
-  {
-    id: "1",
-    word: "permanent job",
-    translate: "постоянная работа",
-  },
-  {
-    id: "2",
-    word: "shallow",
-    translate: "мелкий",
-  },
-  {
-    id: "3",
-    word: "narrow",
-    translate: "узкий",
-  },
-  {
-    id: "4",
-    word: "cowardly",
-    translate: "трусливый",
-  },
-  {
-    id: "5",
-    word: "messy",
-    translate: "беспорядочный",
-  },
-  {
-    id: "6",
-    word: "clumsy",
-    translate: "неуклюжий",
-  },
-  {
-    id: "7",
-    word: "the key thing",
-    translate: "ключевая вещь",
-  },
-  {
-    id: "8",
-    word: "anticipation",
-    translate: "предвкушение, ожидание",
-  },
-];
+import Word from "../models/Word";
 
-const MovieType = new GraphQLObjectType({
-  name: "Words",
+const WordType = new GraphQLObjectType({
+  name: "Word",
   fields: () => ({
     id: { type: GraphQLString },
     word: { type: GraphQLString },
@@ -55,11 +14,30 @@ const MovieType = new GraphQLObjectType({
 const Query = new GraphQLObjectType({
   name: "Query",
   fields: {
-    movie: {
-      type: MovieType,
+    words: {
+      type: WordType,
       args: { id: { type: GraphQLString } },
       resolve(parent, args) {
-        return words.find((word) => word.id == args.id);
+        const result = Word.find({});
+        return result;
+      },
+    },
+  },
+});
+
+const Mutation = new GraphQLObjectType({
+  name: "Mutation",
+  fields: {
+    addWord: {
+      type: WordType,
+      args: {
+        word: { type: GraphQLString },
+        translate: { type: GraphQLString },
+        example: { type: GraphQLString },
+      },
+      resolve(parent, { word, translate, example }) {
+        const newWord = new Word({ word, translate, example });
+        return newWord.save();
       },
     },
   },
@@ -67,4 +45,5 @@ const Query = new GraphQLObjectType({
 
 export default new GraphQLSchema({
   query: Query,
+  mutation: Mutation,
 });
