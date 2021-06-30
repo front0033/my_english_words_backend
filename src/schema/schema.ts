@@ -1,4 +1,9 @@
-import { GraphQLObjectType, GraphQLString, GraphQLSchema } from "graphql";
+import {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLSchema,
+  GraphQLList,
+} from "graphql";
 
 import Word from "../models/Word";
 
@@ -14,12 +19,18 @@ const WordType = new GraphQLObjectType({
 const Query = new GraphQLObjectType({
   name: "Query",
   fields: {
-    words: {
+    word: {
       type: WordType,
       args: { id: { type: GraphQLString } },
       resolve(parent, args) {
-        const result = Word.find({});
-        return result;
+        return Word.findById(args.id);
+      },
+    },
+    words: {
+      type: new GraphQLList(WordType),
+      resolve(parent, args) {
+        // return movies;
+        return Word.find({});
       },
     },
   },
