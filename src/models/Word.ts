@@ -10,8 +10,8 @@ import { Document, Model, model, Schema } from "mongoose";
 export interface IWord extends Document {
   word: string;
   translate: string;
+  topicId: string;
   example?: string;
-  topic?: string;
 }
 
 const wordSchema: Schema = new Schema({
@@ -23,10 +23,11 @@ const wordSchema: Schema = new Schema({
     type: String,
     required: true,
   },
-  example: {
+  topicId: {
     type: String,
+    required: true,
   },
-  topic: {
+  example: {
     type: String,
   },
 });

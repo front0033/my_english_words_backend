@@ -3,31 +3,12 @@ import {
   GraphQLString,
   GraphQLSchema,
   GraphQLList,
-  GraphQLNonNull,
-  GraphQLID,
 } from "graphql";
 
 import Word from "../models/Word";
 import Topic from "../models/Topic";
-
-const WordType = new GraphQLObjectType({
-  name: "Word",
-  fields: () => ({
-    id: { type: GraphQLID },
-    word: { type: new GraphQLNonNull(GraphQLString) },
-    translate: { type: new GraphQLNonNull(GraphQLString) },
-    example: { type: GraphQLString },
-    topic: { type: GraphQLString },
-  }),
-});
-
-const TopicType = new GraphQLObjectType({
-  name: "Topic",
-  fields: () => ({
-    id: { type: GraphQLID },
-    name: { type: new GraphQLNonNull(GraphQLString) },
-  }),
-});
+import WordType from "./word";
+import TopicType from "./topic";
 
 const Query = new GraphQLObjectType({
   name: "Query",
@@ -42,7 +23,6 @@ const Query = new GraphQLObjectType({
     words: {
       type: new GraphQLList(WordType),
       resolve(parent, args) {
-        // return movies;
         return Word.find({});
       },
     },
@@ -56,7 +36,6 @@ const Query = new GraphQLObjectType({
     topics: {
       type: new GraphQLList(TopicType),
       resolve(parent, args) {
-        // return movies;
         return Topic.find({});
       },
     },
@@ -72,10 +51,10 @@ const Mutation = new GraphQLObjectType({
         word: { type: GraphQLString },
         translate: { type: GraphQLString },
         example: { type: GraphQLString },
-        topic: { type: GraphQLString },
+        topicId: { type: GraphQLString },
       },
-      resolve(parent, { word, translate, example, topic }) {
-        const newWord = new Word({ word, translate, example, topic });
+      resolve(parent, { word, translate, example, topicId }) {
+        const newWord = new Word({ word, translate, example, topicId });
         return newWord.save();
       },
     },
