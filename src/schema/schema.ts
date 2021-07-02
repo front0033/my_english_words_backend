@@ -16,7 +16,7 @@ const Query = new GraphQLObjectType({
   fields: {
     word: {
       type: WordType,
-      args: { id: { type: GraphQLString } },
+      args: { id: { type: GraphQLID } },
       resolve(parent, args) {
         return Word.findById(args.id);
       },
@@ -27,9 +27,16 @@ const Query = new GraphQLObjectType({
         return Word.find({});
       },
     },
+    wordsByTopicId: {
+      type: new GraphQLList(WordType),
+      args: { topicId: { type: GraphQLID } },
+      resolve(parent, { topicId }) {
+        return Word.find({ topicId });
+      },
+    },
     topic: {
       type: TopicType,
-      args: { id: { type: GraphQLString } },
+      args: { id: { type: GraphQLID } },
       resolve(parent, args) {
         return Topic.findById(args.id);
       },
@@ -52,7 +59,7 @@ const Mutation = new GraphQLObjectType({
         word: { type: GraphQLString },
         translate: { type: GraphQLString },
         example: { type: GraphQLString },
-        topicId: { type: GraphQLString },
+        topicId: { type: GraphQLID },
       },
       resolve(parent, { word, translate, example, topicId }) {
         const newWord = new Word({ word, translate, example, topicId });
@@ -81,6 +88,34 @@ const Mutation = new GraphQLObjectType({
       args: { id: { type: GraphQLID } },
       resolve(parent, { id }) {
         return Topic.findByIdAndRemove(id);
+      },
+    },
+    updateWord: {
+      type: WordType,
+      args: {
+        id: { type: GraphQLID },
+        word: { type: GraphQLString },
+        translate: { type: GraphQLString },
+        example: { type: GraphQLString },
+        topicId: { type: GraphQLString },
+      },
+      resolve(parent, { id, word, translate, example, topicId }) {
+        return Word.findByIdAndUpdate(id, {
+          word,
+          translate,
+          example,
+          topicId,
+        });
+      },
+    },
+    updateTopic: {
+      type: TopicType,
+      args: {
+        id: { type: GraphQLID },
+        name: { type: GraphQLString },
+      },
+      resolve(parent, { id, name }) {
+        return Topic.findByIdAndUpdate(id, { name });
       },
     },
   },
