@@ -3,6 +3,7 @@ import {
   GraphQLString,
   GraphQLSchema,
   GraphQLList,
+  GraphQLID,
 } from "graphql";
 
 import Word from "../models/Word";
@@ -66,6 +67,20 @@ const Mutation = new GraphQLObjectType({
       resolve(parent, { name }) {
         const newTopic = new Topic({ name });
         return newTopic.save();
+      },
+    },
+    deleteWord: {
+      type: WordType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, { id }) {
+        return Word.findByIdAndRemove(id);
+      },
+    },
+    deleteTopic: {
+      type: TopicType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, { id }) {
+        return Topic.findByIdAndRemove(id);
       },
     },
   },
