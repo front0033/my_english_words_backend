@@ -4,12 +4,14 @@ import {
   GraphQLSchema,
   GraphQLList,
   GraphQLID,
+  GraphQLFormattedError,
 } from "graphql";
 
-import Word from "../models/Word";
+import Word, { IWord } from "../models/Word";
 import Topic from "../models/Topic";
 import WordType from "./word";
 import TopicType from "./topic";
+import { Error } from "mongoose";
 
 const Query = new GraphQLObjectType({
   name: "Query",
@@ -87,13 +89,15 @@ const Mutation = new GraphQLObjectType({
       type: TopicType,
       args: { id: { type: GraphQLID } },
       resolve(_parent, { id }) {
-        const someWord = Word.findOne({ topicId: id });
-
-        if (someWord) {
-          throw new Error("Words with current topicId exist");
-        } else {
-          return Topic.findByIdAndRemove(id);
-        }
+        return Word.findOne({ topicId: id }, (_err: Error, word: IWord) => {
+          if (!word) {
+            return Topic.deleteOne({ _id: id });
+          } else {
+            throw new Error(
+              `${word.word} - exist in current dictionary. Error delete topic.`
+            );
+          }
+        });
       },
     },
     updateWord: {
