@@ -107,7 +107,7 @@ const Mutation = new GraphQLObjectType({
         word: { type: GraphQLString },
         translate: { type: GraphQLString },
         example: { type: GraphQLString },
-        topicId: { type: GraphQLString },
+        topicId: { type: GraphQLID },
       },
       resolve(_parent, { id, word, translate, example, topicId }) {
         return Word.findByIdAndUpdate(id, {
