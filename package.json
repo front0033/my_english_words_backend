@@ -1,7 +1,11 @@
 {
   "name": "my-english-words-backend",
-  "version": "0.0.0",
-  "description": "Mongoose Node.js Express TypeScript application boilerplate with best practices for API development.",
+  "autor": {
+    "name": "Igor Bezdenezhnykh",
+    "email": "servis0033@gmail.ru"
+  },
+  "description": "backend for my-english app (Example of my programming skills)",
+  "version": "0.1.0",
   "author": "Igor Bezdenezhnykh",
   "license": "MIT",
   "scripts": {

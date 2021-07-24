@@ -1,5 +1,7 @@
 # My English Words Backend
 
+Example of my programming skills
+
 # Prerequisites
 
 To build and run this app locally you will need a few things:
