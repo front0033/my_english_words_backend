@@ -5,13 +5,13 @@ import { Document, Model, model, Schema } from "mongoose";
  * @param word:string
  * @param translate:string
  * @param example:string
- * @param dictionary:string
+ * @param topic:string
  */
 export interface IWord extends Document {
   word: string;
   translate: string;
-  example: string;
-  dictionary: string;
+  topicId: string;
+  example?: string;
 }
 
 const wordSchema: Schema = new Schema({
@@ -21,15 +21,15 @@ const wordSchema: Schema = new Schema({
   },
   translate: {
     type: String,
-    required: true
+    required: true,
+  },
+  topicId: {
+    type: String,
+    required: true,
   },
   example: {
-    type: String
-  },
-  dictionary: {
     type: String,
-    required: true
-  }
+  },
 });
 
 const Word: Model<IWord> = model("Word", wordSchema);
