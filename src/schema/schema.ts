@@ -4,23 +4,32 @@ import {
   GraphQLSchema,
   GraphQLList,
   GraphQLID,
-  GraphQLFormattedError,
 } from "graphql";
 
+import User from "../models/User";
 import Word, { IWord } from "../models/Word";
 import Topic from "../models/Topic";
 import WordType from "./word";
 import TopicType from "./topic";
 import { Error } from "mongoose";
+import UserType from "./user";
+import ProfileType from "./profile";
 
 const Query = new GraphQLObjectType({
   name: "Query",
   fields: {
-    word: {
-      type: WordType,
+    user: {
+      type: UserType,
       args: { id: { type: GraphQLID } },
       resolve(_parent, args) {
-        return Word.findById(args.id);
+        return User.findById(args.id);
+      },
+    },
+    profile: {
+      type: ProfileType,
+      args: { id: { type: GraphQLID } },
+      resolve(_parent, args) {
+        return User.findById(args.id);
       },
     },
     words: {
