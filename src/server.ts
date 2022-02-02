@@ -1,6 +1,7 @@
 import bodyParser from "body-parser";
 import express from "express";
 import { graphqlHTTP } from "express-graphql";
+import authMiddleWare from "./middleware/auth";
 const cors = require("cors");
 
 import connectDB from "../config/database";
@@ -12,6 +13,7 @@ const app = express();
 connectDB();
 
 app.use(cors());
+app.use(authMiddleWare);
 
 // Express configuration
 app.set("port", process.env.PORT || 5000);

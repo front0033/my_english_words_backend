@@ -22,6 +22,90 @@ const UserType: GraphQLObjectType = new GraphQLObjectType({
   }),
 });
 
+export const AuthQuery = new GraphQLObjectType({
+  name: "AuthQuery",
+  fields: {
+    login: {
+      type: UserType,
+      args: {
+        email: { type: GraphQLString },
+        password: { type: GraphQLString },
+      },
+      async resolve(_parent, { email, password }) {
+        try {
+          let user: IUser = await User.findOne({ email });
+
+          if (!user) {
+            throw new Error(
+              `${HttpStatusCodes.BAD_REQUEST} - Invalid Credentials.`
+            );
+
+            return;
+          }
+
+          const isMatch = await bcrypt.compare(password, user.password);
+
+          if (!isMatch) {
+            throw new Error(
+              `${HttpStatusCodes.BAD_REQUEST} - Invalid Credentials.`
+            );
+
+            return;
+          }
+
+          const payload = {
+            userId: user.id,
+          };
+
+          jwt.sign(
+            payload,
+            config.get("jwtSecret"),
+            { expiresIn: config.get("jwtExpiration") },
+            (err, token) => {
+              if (err) throw err;
+            }
+          );
+        } catch (err) {
+          console.error(err.message);
+          throw new Error(
+            `${HttpStatusCodes.INTERNAL_SERVER_ERROR} - Server Error.`
+          );
+        }
+      },
+    },
+    getUser: {
+      type: UserType,
+      args: { userId: { type: GraphQLID } },
+      async resolve(_parent, { userId }) {
+        try {
+          const user: IUser = await User.findById(userId).select("-password");
+          return user;
+        } catch (err) {
+          console.error(err.message);
+          throw new Error(
+            `${HttpStatusCodes.INTERNAL_SERVER_ERROR} - Server Error.`
+          );
+        }
+      },
+    },
+    logout: {
+      type: UserType,
+      args: { userId: { type: GraphQLID } },
+      async resolve(_parent, { userId }, ctx) {
+        try {
+          ctx.res.clearCookie("token");
+          return { msg: "logout is OK" };
+        } catch (err) {
+          console.error(err.message);
+          throw new Error(
+            `${HttpStatusCodes.INTERNAL_SERVER_ERROR} - Server Error.`
+          );
+        }
+      },
+    },
+  },
+});
+
 export const UserMutation = new GraphQLObjectType({
   name: "UserMutation",
   fields: {
