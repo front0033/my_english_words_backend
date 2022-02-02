@@ -95,8 +95,8 @@ router.post(
 // @access  Private
 router.get("/logout", auth, async (req: Request, res: Response) => {
   try {
-    res.clearCookie('token');
-    return res.status(200).json({msg: 'logout is OK'});
+    res.clearCookie("token");
+    return res.status(200).json({ msg: "logout is OK" });
   } catch (err) {
     console.error(err.message);
     res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send("Server Error");

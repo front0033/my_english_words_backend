@@ -9,7 +9,8 @@ import Request from "../types/Request";
 
 export default function (req: Request, res: Response, next: NextFunction) {
   // Get token from header
-  const { access_token } = cookie.parse(req.headers.cookie);
+  const cookies = cookie.parse(req.headers.cookie || "");
+  const { access_token } = cookies;
 
   // Check if no token
   if (!access_token) {

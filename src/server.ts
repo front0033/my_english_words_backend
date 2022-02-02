@@ -14,8 +14,16 @@ const app = express();
 
 // Connect to MongoDB
 connectDB();
-
 app.use(cors());
+
+// Express configuration
+app.set("port", process.env.PORT || 5000);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// @route   GET /
+// @desc    Test Base API
+// @access  Public
 
 app.use("/api/auth", auth);
 app.use("/api/user", user);
@@ -25,8 +33,6 @@ app.use(authMiddleWare);
 
 // Express configuration
 app.set("port", process.env.PORT || 5000);
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(
   "/graphql",
