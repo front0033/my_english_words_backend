@@ -4,7 +4,7 @@ import { graphqlHTTP } from "express-graphql";
 const cors = require("cors");
 
 import connectDB from "../config/database";
-import schema from "./schema/schema";
+import schema from "./schema";
 
 const app = express();
 
