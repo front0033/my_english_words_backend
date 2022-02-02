@@ -2,6 +2,9 @@ import bodyParser from "body-parser";
 import express from "express";
 import { graphqlHTTP } from "express-graphql";
 import authMiddleWare from "./middleware/auth";
+import auth from "./routes/api/auth";
+import user from "./routes/api/user";
+
 const cors = require("cors");
 
 import connectDB from "../config/database";
@@ -13,6 +16,11 @@ const app = express();
 connectDB();
 
 app.use(cors());
+
+app.use("/api/auth", auth);
+app.use("/api/user", user);
+
+// auth only for graphql
 app.use(authMiddleWare);
 
 // Express configuration

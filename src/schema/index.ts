@@ -1,13 +1,8 @@
 import { GraphQLSchema } from "graphql";
 import { schemaComposer } from "graphql-compose";
-import { UserMutation } from "./user";
 import { WordQuery, WordMutation } from "./word";
 import { TopicQuery, TopicMutation } from "./topic";
 import { ProfileQuery, ProfileMutation } from "./profile";
-
-const UserSchema = new GraphQLSchema({
-  mutation: UserMutation,
-});
 
 const ProfileSchema = new GraphQLSchema({
   query: ProfileQuery,
@@ -24,7 +19,6 @@ const TopicSchema = new GraphQLSchema({
   mutation: TopicMutation,
 });
 
-schemaComposer.merge(UserSchema);
 schemaComposer.merge(ProfileSchema);
 schemaComposer.merge(WorldSchema);
 schemaComposer.merge(TopicSchema);
