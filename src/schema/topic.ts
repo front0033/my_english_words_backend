@@ -13,6 +13,7 @@ export const TopicType: GraphQLObjectType = new GraphQLObjectType({
   name: "Topic",
   fields: () => ({
     id: { type: GraphQLID },
+    userId: { type: GraphQLID },
     name: { type: new GraphQLNonNull(GraphQLString) },
     words: {
       type: new GraphQLList(WordType),
@@ -28,15 +29,19 @@ export const TopicQuery = new GraphQLObjectType({
   fields: {
     topic: {
       type: TopicType,
-      args: { id: { type: GraphQLID } },
-      resolve(_parent, args) {
-        return Topic.findById(args.id);
+      args: {
+        id: { type: GraphQLID },
+        userId: { type: GraphQLID },
+      },
+      resolve(_parent, { id }) {
+        return Topic.findById(id).select("-userId");
       },
     },
     topics: {
       type: new GraphQLList(TopicType),
-      resolve(_parent, args) {
-        return Topic.find({});
+      args: { userId: { type: GraphQLID } },
+      resolve(_parent, { userId }) {
+        return Topic.find({ userId }).select("-userId");
       },
     },
   },
@@ -49,9 +54,10 @@ export const TopicMutation = new GraphQLObjectType({
       type: TopicType,
       args: {
         name: { type: GraphQLString },
+        userId: { type: GraphQLID },
       },
-      resolve(_parent, { name }) {
-        const newTopic = new Topic({ name });
+      resolve(_parent, { name, userId }) {
+        const newTopic = new Topic({ name, userId });
         return newTopic.save();
       },
     },
@@ -74,10 +80,11 @@ export const TopicMutation = new GraphQLObjectType({
       type: TopicType,
       args: {
         id: { type: GraphQLID },
+        userId: { type: GraphQLID },
         name: { type: GraphQLString },
       },
-      resolve(_parent, { id, name }) {
-        return Topic.findByIdAndUpdate(id, { name });
+      resolve(_parent, { id, name, userId }) {
+        return Topic.findByIdAndUpdate(id, { name, userId }).select("-userId");
       },
     },
   },
