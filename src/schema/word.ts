@@ -28,6 +28,13 @@ export const WordType: GraphQLObjectType = new GraphQLObjectType({
 export const WordQuery = new GraphQLObjectType({
   name: "WordQuery",
   fields: {
+    word: {
+      type: WordType,
+      args: { id: { type: GraphQLID } },
+      resolve(_parent, args) {
+        return Word.findById(args.id);
+      },
+    },
     words: {
       type: new GraphQLList(WordType),
       resolve(_parent, args) {
