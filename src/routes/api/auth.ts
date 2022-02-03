@@ -17,6 +17,7 @@ const router: Router = Router();
 // @access  Private
 router.get("/", auth, async (req: Request, res: Response) => {
   try {
+    console.log("req - ", req.userId);
     const user: IUser = await User.findById(req.userId).select("-password");
     res.json(user);
   } catch (err) {

@@ -4,6 +4,7 @@ import { graphqlHTTP } from "express-graphql";
 import authMiddleWare from "./middleware/auth";
 import auth from "./routes/api/auth";
 import user from "./routes/api/user";
+import profile from "./routes/api/profile";
 
 const cors = require("cors");
 
@@ -27,6 +28,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/api/auth", auth);
 app.use("/api/user", user);
+app.use("/api/profile", profile);
 
 // auth only for graphql
 app.use(authMiddleWare);
