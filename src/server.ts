@@ -1,22 +1,40 @@
 import bodyParser from "body-parser";
 import express from "express";
 import { graphqlHTTP } from "express-graphql";
+import authMiddleWare from "./middleware/auth";
+import auth from "./routes/api/auth";
+import user from "./routes/api/user";
+import profile from "./routes/api/profile";
+
 const cors = require("cors");
 
 import connectDB from "../config/database";
-import schema from "./schema/schema";
+import schema from "./schema";
 
 const app = express();
 
 // Connect to MongoDB
 connectDB();
-
 app.use(cors());
 
 // Express configuration
 app.set("port", process.env.PORT || 5000);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// @route   GET /
+// @desc    Test Base API
+// @access  Public
+
+app.use("/api/auth", auth);
+app.use("/api/user", user);
+app.use("/api/profile", profile);
+
+// auth only for graphql
+app.use(authMiddleWare);
+
+// Express configuration
+app.set("port", process.env.PORT || 5000);
 
 app.use(
   "/graphql",

@@ -6,10 +6,15 @@ import { Document, Model, model, Schema } from "mongoose";
  */
 export interface ITopic extends Document {
   name: string;
+  userId: string;
 }
 
 const topicSchema: Schema = new Schema({
   name: {
+    type: String,
+    required: true,
+  },
+  userId: {
     type: String,
     required: true,
   },
